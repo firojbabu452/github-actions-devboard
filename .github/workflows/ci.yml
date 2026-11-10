@@ -39,5 +39,6 @@ jobs:
         - name: Build and push Docker image
           uses: docker/build-push-action@v4
           with:
+              context: .
               push: true
               tags: ${{ vars.DOCKER_USERNAME }}/devboard-fe-master:latest
