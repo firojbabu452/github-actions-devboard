@@ -39,6 +39,6 @@ jobs:
         - name: Build and push Docker image
           uses: docker/build-push-action@v4
           with:
-              context: .
+              context: ./frontend
               push: true
-              tags: ${{ secrets.DOCKER_USERNAME }}/devboard-fe-master:latest
+              tags: ${{ secrets.DOCKER_USERNAME }}/devboard-frontend:latest
