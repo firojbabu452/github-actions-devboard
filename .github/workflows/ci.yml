@@ -41,4 +41,4 @@ jobs:
           with:
               context: .
               push: true
-              tags: ${{ vars.DOCKER_USERNAME }}/devboard-fe-master:latest
+              tags: ${{ secrets.DOCKER_USERNAME }}/devboard-fe-master:latest
