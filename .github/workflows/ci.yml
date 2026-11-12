@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  frontend-ci:
+  frontend:
     name: Frontend Lint, Build & Test
     runs-on: ubuntu-latest
 
@@ -63,3 +63,54 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/devboard-frontend:latest
             ${{ secrets.DOCKER_USERNAME }}/devboard-frontend:${{ github.sha }}
+  
+  backend:
+     name: Backend Lint, Build & Test
+     runs-on: ubuntu-latest
+     steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+        
+      - name: Set up Node.js
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.23'
+          go-version-file: 'go.mod'
+          cache-dependency-path: go.sum
+
+      - name: Run go formatter
+        run: go fmt
+        working-directory: backend
+
+      - name: Run go vet
+        run: go vet
+        working-directory: backend
+
+      - name: Run Tests
+        run: go test
+        working-directory: backend
+
+  build-and-push-backend:
+    name: Build & Push Backend Image
+    needs: backend-ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/devboard-backend:latest
+            ${{ secrets.DOCKER_USERNAME }}/devboard-backend:${{ github.sha }}
