@@ -42,7 +42,7 @@ jobs:
 
   build-and-push-frontend:
     name: Build & Push Frontend Image
-    needs: frontend-ci
+    needs: frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -93,7 +93,7 @@ jobs:
 
   build-and-push-backend:
     name: Build & Push Backend Image
-    needs: backend-ci
+    needs: backend
     runs-on: ubuntu-latest
 
     steps:
