@@ -114,3 +114,8 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/devboard-backend:latest
             ${{ secrets.DOCKER_USERNAME }}/devboard-backend:${{ github.sha }}
+
+  deploy:
+     needs: [build-and-push-frontend, build-and-push-backend]
+     uses: ./.github/workflows/cd.yml
+     secrets: inherit
