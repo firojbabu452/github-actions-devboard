@@ -11,7 +11,7 @@ permissions:
 jobs:
   frontend:
     name: Frontend Lint, Build & Test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -43,7 +43,7 @@ jobs:
   build-and-push-frontend:
     name: Build & Push Frontend Image
     needs: frontend
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -66,7 +66,7 @@ jobs:
   
   backend:
      name: Backend Lint, Build & Test
-     runs-on: ubuntu-latest
+     runs-on: self-hosted
      steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -94,7 +94,7 @@ jobs:
   build-and-push-backend:
     name: Build & Push Backend Image
     needs: backend
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
