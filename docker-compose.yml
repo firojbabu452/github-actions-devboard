@@ -4,8 +4,8 @@
 #
 # Every configurable value lives in .env — Compose loads it automatically and
 # fills in the ${...} placeholders below. Edit .env, not this file, to change
-# credentials or ports. This way learners can see in one place exactly which
-# variables get injected into the db and the backend.
+# credentials, ports, or image tags. This way learners can see in one place
+# exactly which variables get injected into the services.
 #
 # Bring it up:  docker compose up --build
 # Then open:    http://localhost:8080   (FRONTEND_HOST_PORT)
@@ -29,9 +29,9 @@ services:
       - "${POSTGRES_HOST_PORT}:5432"
 
   backend:
-    # build = local; image = the tag CI pushes and CD pulls (IMAGE_TAG, else latest).
+    # Local runs can build; CI publishes latest and the commit SHA. CD defaults to latest.
     build: ./backend
-    image: trainwithshubham/devboard-backend:${IMAGE_TAG:-latest}
+    image: ${DOCKER_USERNAME:-firojbabu452}/devboard-backend:${IMAGE_TAG:-latest}
     environment:
       PORT: "${BACKEND_PORT}"
       # Built from the Postgres vars above so the credentials live in one place.
@@ -44,7 +44,7 @@ services:
 
   frontend:
     build: ./frontend
-    image: trainwithshubham/devboard-frontend:${IMAGE_TAG:-latest}
+    image: ${DOCKER_USERNAME:-firojbabu452}/devboard-frontend:${IMAGE_TAG:-latest}
     depends_on:
       - backend
     ports:
