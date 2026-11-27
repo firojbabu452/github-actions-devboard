@@ -8,7 +8,7 @@ on:
         workflows: ["CI"]
         types:
             - completed
-        branches: [main]
+        branches: [main,advanced]
     workflow_dispatch:
      
 

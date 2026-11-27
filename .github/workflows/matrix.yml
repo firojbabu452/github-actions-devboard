@@ -1,31 +1,43 @@
 name: Go linter
 
 on:
- workflow_dispatch:
+  workflow_dispatch:
 
+permissions:
+  contents: read
 
- jobs:
-   code-format:
-      runs-on: ubuntu-latest
-      strategy:
-        fail-fast: false
-        matrix:
-          go-version: ['1.23', '1.22', '1.21']
-      steps:
-  
-        - name: Set up Go
-          uses: actions/setup-go@v4
-          with:
-            go-version: ${{ matrix.go-version }}
-            go-version-file: 'go.mod'
-            cache-dependency-path: go.sum
-  
-        - name: Run go Formatter
-          run: go fmt
-          working-directory: backend
+jobs:
+  code-format:
+    name: Go ${{ matrix.go-version }} lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ['1.22', '1.23']
 
-        - name: Run go vet
-          run: go vet
-          working-directory: backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
 
-      
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache-dependency-path: backend/go.sum
+
+      - name: Check formatting
+        working-directory: backend
+        run: |
+          files="$(gofmt -l .)"
+          if [ -n "$files" ]; then
+            printf '%s\n' "$files"
+            exit 1
+          fi
+
+      - name: Run go vet
+        working-directory: backend
+        run: go vet ./...
+
+      - name: Run tests
+        working-directory: backend
+        run: go test ./...
